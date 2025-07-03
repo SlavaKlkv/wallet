@@ -6,11 +6,7 @@ from api.views import WalletViewSet
 app_name = "api"
 
 router_v1 = DefaultRouter()
-routes = [
-    ("wallets", WalletViewSet),
-]
-for prefix, viewset in routes:
-    router_v1.register(prefix, viewset, basename=prefix)
+router_v1.register('wallets', WalletViewSet, basename='wallets')
 
 urlpatterns_v1 = [
     path(

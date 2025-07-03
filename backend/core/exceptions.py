@@ -1,10 +1,9 @@
-from django.db import IntegrityError
-from logging_setup import logger_setup
 from rest_framework import status
 from rest_framework.exceptions import ParseError
 from rest_framework.response import Response
 from rest_framework.views import exception_handler
 
+from logging_setup import logger_setup
 
 logger = logger_setup()
 
@@ -32,15 +31,6 @@ def custom_exception_handler(exc, context):
             status=status.HTTP_500_INTERNAL_SERVER_ERROR,
         )
 
-    if isinstance(exc, ValidationError):
-        data = exc.detail if isinstance(exc.detail, dict) else {
-            "detail": exc.detail}
-        response = Response(data, status=exc.status_code)
-    if isinstance(exc, IntegrityError):
-        response = Response(
-            {"detail": "Это поле должно быть уникальным."},
-            status=status.HTTP_400_BAD_REQUEST,
-        )
     if isinstance(exc, ParseError):
         response = Response(
             {
