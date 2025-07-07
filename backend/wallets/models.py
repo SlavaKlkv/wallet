@@ -1,3 +1,4 @@
+from decimal import Decimal
 import uuid
 
 from django.conf import settings
@@ -13,7 +14,7 @@ from core.constants import (
     MONEY_DEFAULT,
     MONEY_MAX_DIGITS,
     NAME_MAX_LENGTH,
-    OPERATION_TYPE_MAX_LENGTH
+    OPERATION_TYPE_MAX_LENGTH,
 )
 from core.managers import UserManager
 
@@ -94,6 +95,7 @@ class Wallet(models.Model):
     def __str__(self):
         return f"Кошелек {str(self.uuid)[:8]}"
 
+
 class Operation(models.Model):
     DEPOSIT = 'deposit'
     WITHDRAW = 'withdraw'
@@ -120,7 +122,7 @@ class Operation(models.Model):
         decimal_places=MONEY_DECIMAL_PLACES,
         verbose_name='Сумма',
         help_text='Сумма операции',
-        validators=[MinValueValidator(AMOUNT_MIN_VALUE)],
+        validators=[MinValueValidator(Decimal(str(AMOUNT_MIN_VALUE)))],
     )
     created_at = models.DateTimeField(
         auto_now_add=True,
@@ -136,5 +138,5 @@ class Operation(models.Model):
     def __str__(self):
         return (
             f"{self.get_operation_type_display()} на сумму {self.amount} "
-                f"от {self.created_at.strftime('%Y-%m-%d %H:%M:%S')}"
+            f"от {self.created_at.strftime('%Y-%m-%d %H:%M:%S')}"
         )

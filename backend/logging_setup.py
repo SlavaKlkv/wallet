@@ -1,11 +1,11 @@
 import logging
+from logging.handlers import RotatingFileHandler
 import os
 import sys
-from logging.handlers import RotatingFileHandler
 
-from django.conf import settings
 
-BASE_DIR = settings.BASE_DIR
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
 
 def logger_setup():
     logger = logging.getLogger(__name__)
@@ -16,7 +16,9 @@ def logger_setup():
     )
     os.makedirs(os.path.join(BASE_DIR, "logs"), exist_ok=True)
     handler = RotatingFileHandler(
-        f"{BASE_DIR}/logs/logger.log", maxBytes=2_560_000, backupCount=5
+        f"{BASE_DIR}/logs/logger.log",
+        maxBytes=2_560_000,
+        backupCount=5
     )
     handler.setFormatter(formatter)
     logger.addHandler(handler)

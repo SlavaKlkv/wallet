@@ -1,9 +1,7 @@
 from django.contrib import admin
 
-from .models import (
-    User,
-    Wallet
-)
+from .models import User, Wallet
+
 
 admin.site.empty_value_display = "Не указано"
 

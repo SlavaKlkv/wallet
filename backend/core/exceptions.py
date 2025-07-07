@@ -5,6 +5,7 @@ from rest_framework.views import exception_handler
 
 from logging_setup import logger_setup
 
+
 logger = logger_setup()
 
 

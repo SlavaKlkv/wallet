@@ -8,13 +8,14 @@ from .models import Operation
 @receiver([post_save, post_delete], sender=Operation)
 def update_wallet_balance(sender, instance, **kwargs):
     wallet = instance.wallet
-    total_deposit = wallet.operations.filter(
-        operation_type=Operation.DEPOSIT
-    ).aggregate(total=Sum('amount'))['total'] or 0
 
-    total_withdraw = wallet.operations.filter(
-        operation_type=Operation.WITHDRAW
-    ).aggregate(total=Sum('amount'))['total'] or 0
+    totals = {
+        operation_type: wallet.operations.filter(
+            operation_type=operation_type
+        ).aggregate(total=Sum('amount'))['total'] or 0
+        for operation_type in (Operation.DEPOSIT, Operation.WITHDRAW)
+    }
 
-    wallet.balance = total_deposit - total_withdraw
+    wallet.balance = (totals.get(Operation.DEPOSIT)
+                      - totals.get(Operation.WITHDRAW))
     wallet.save(update_fields=['balance'])

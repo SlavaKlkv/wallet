@@ -1,5 +1,7 @@
 version: '3'
 
+# Образы пу́шатся на Docker Hub при необходимости под нужные архитектуры
+
 volumes:
   pg_data_production:
   static_volume:
@@ -7,7 +9,7 @@ volumes:
 
 services:
   db:
-    image: postgres:13
+    image: postgres:17
     env_file: .env
     volumes:
       - pg_data_production:/var/lib/postgresql/data

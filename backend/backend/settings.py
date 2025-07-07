@@ -1,9 +1,11 @@
 import os
 from pathlib import Path
 
+from dotenv import load_dotenv
+
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-from dotenv import load_dotenv
 
 load_dotenv()
 
@@ -90,7 +92,6 @@ else:
             "PORT": os.getenv("DB_PORT", 5432),
         }
     }
-
 
 
 # Password validation

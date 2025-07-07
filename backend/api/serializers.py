@@ -4,6 +4,8 @@ from wallets.models import Operation, Wallet
 
 
 class WalletSerializer(serializers.ModelSerializer):
+    balance = serializers.FloatField()
+
     class Meta:
         model = Wallet
         fields = ('balance',)

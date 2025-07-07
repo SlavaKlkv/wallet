@@ -6,4 +6,4 @@ class WalletsConfig(AppConfig):
     name = "wallets"
 
     def ready(self):
-        from . import signals # noqa
+        from . import signals  # noqa

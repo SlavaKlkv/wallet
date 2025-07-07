@@ -1,7 +1,8 @@
 from django.urls import include, path
 from rest_framework.routers import DefaultRouter
 
-from api.views import WalletViewSet
+from api.views import WalletViewSet, healthcheck
+
 
 app_name = "api"
 
@@ -15,9 +16,9 @@ urlpatterns_v1 = [
             path("", include(router_v1.urls)),
             path("auth/", include("djoser.urls")),
             path("auth/", include("djoser.urls.authtoken")),
+            path("health", healthcheck),
         ]),
     ),
 ]
 
 urlpatterns = urlpatterns_v1
-

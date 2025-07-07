@@ -3,8 +3,9 @@ import shutil
 import sys
 import tempfile
 
-import pytest
 from django.conf import settings
+import pytest
+
 
 BASE_DIR = os.path.join(
     os.path.dirname(os.path.dirname(os.path.abspath(__file__))),

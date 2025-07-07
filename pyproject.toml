@@ -4,7 +4,12 @@ line_length = 79
 multi_line_output = 3
 include_trailing_comma = true
 known_first_party = [
-    "backend",
+    'backend',
+    'wallets',
+    'core',
+    'api',
+    'tests',
+    'logging_setup'
 ]
 default_section = "THIRDPARTY"
 sections = "FUTURE,STDLIB,THIRDPARTY,FIRSTPARTY,LOCALFOLDER"
