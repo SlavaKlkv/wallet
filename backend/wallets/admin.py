@@ -1,23 +1,13 @@
 from django.contrib import admin
 
-from .models import User, Wallet
-
+from .models import Operation, Wallet
 
 admin.site.empty_value_display = "Не указано"
 
 
-@admin.register(User)
-class UserAdmin(admin.ModelAdmin):
-    list_display = (
-        "username",
-        "first_name",
-        "last_name",
-        "email",
-        "is_staff"
-    )
-    search_fields = ("username", "email")
-    ordering = ("username",)
-
+class OperationInline(admin.TabularInline):
+    model = Operation
+    extra = 0
 
 @admin.register(Wallet)
 class WalletAdmin(admin.ModelAdmin):
@@ -28,6 +18,7 @@ class WalletAdmin(admin.ModelAdmin):
         'created_at',
         'updated_at',
     )
+    readonly_fields = ('balance',)
     search_fields = (
         'uuid',
         'user__username',
@@ -35,3 +26,14 @@ class WalletAdmin(admin.ModelAdmin):
     )
     list_filter = ('user', 'created_at')
     raw_id_fields = ('user',)
+    inlines = [OperationInline]
+
+@admin.register(Operation)
+class OperationAdmin(admin.ModelAdmin):
+    list_display = (
+        'id',
+        'wallet',
+        'operation_type',
+        'amount',
+        'created_at'
+    )

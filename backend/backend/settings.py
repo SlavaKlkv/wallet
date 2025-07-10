@@ -3,7 +3,6 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 
-
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
@@ -38,14 +37,16 @@ INSTALLED_APPS = [
     "djoser",
     "api",
     "core",
+    "users",
     "wallets",
 ]
 
-AUTH_USER_MODEL = "wallets.User"
+AUTH_USER_MODEL = "users.User"
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    'django.middleware.locale.LocaleMiddleware',
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
@@ -116,12 +117,10 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
-LANGUAGE_CODE = "ru-RU"
-
+LANGUAGE_CODE = "ru"
 TIME_ZONE = "Europe/Moscow"
-
 USE_I18N = True
-
+USE_L10N = False
 USE_TZ = True
 
 

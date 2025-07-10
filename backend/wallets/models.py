@@ -1,61 +1,18 @@
-from decimal import Decimal
 import uuid
+from decimal import Decimal
 
 from django.conf import settings
-from django.contrib.auth.models import AbstractUser
-from django.contrib.auth.validators import UnicodeUsernameValidator
+from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator
 from django.db import models
 
 from core.constants import (
     AMOUNT_MIN_VALUE,
-    EMAIL_MAX_LENGTH,
     MONEY_DECIMAL_PLACES,
     MONEY_DEFAULT,
     MONEY_MAX_DIGITS,
-    NAME_MAX_LENGTH,
     OPERATION_TYPE_MAX_LENGTH,
 )
-from core.managers import UserManager
-
-
-class User(AbstractUser):
-    email = models.EmailField(
-        unique=True,
-        max_length=EMAIL_MAX_LENGTH,
-        verbose_name="Адрес электронной почты"
-    )
-    username = models.CharField(
-        unique=True,
-        max_length=NAME_MAX_LENGTH,
-        verbose_name="Имя пользователя",
-        validators=[UnicodeUsernameValidator()],
-    )
-    first_name = models.CharField(
-        max_length=NAME_MAX_LENGTH,
-        verbose_name="Имя"
-    )
-    last_name = models.CharField(
-        max_length=NAME_MAX_LENGTH,
-        verbose_name="Фамилия"
-    )
-    avatar = models.ImageField(
-        "Аватар",
-        upload_to="users/",
-        blank=False,
-        null=True,
-    )
-
-    USERNAME_FIELD = "email"
-    REQUIRED_FIELDS = ()
-    objects = UserManager()
-
-    class Meta:
-        verbose_name = "Пользователь"
-        verbose_name_plural = "Пользователи"
-
-    def __str__(self):
-        return self.username
 
 
 class Wallet(models.Model):
@@ -109,6 +66,8 @@ class Operation(models.Model):
         on_delete=models.CASCADE,
         related_name='operations',
         verbose_name='Кошелёк',
+        blank=False,
+        null=False,
         help_text='Кошелёк, к которому относится операция'
     )
     operation_type = models.CharField(
@@ -134,6 +93,16 @@ class Operation(models.Model):
         verbose_name = "Операция"
         verbose_name_plural = "Операции"
         ordering = ('-created_at',)
+
+    def clean(self):
+        if self.operation_type == self.WITHDRAW:
+            wallet = Wallet.objects.get(pk=self.wallet.pk)
+            if wallet.balance < self.amount:
+                raise ValidationError('Недостаточно средств.')
+
+    def save(self, *args, **kwargs):
+        self.clean()
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return (

@@ -7,7 +7,6 @@ from rest_framework.response import Response
 from core.mixins import CustomGetObjectMixin
 from core.permissions import IsWalletOwner
 from wallets.models import Operation, Wallet
-
 from .serializers import OperationSerializer, WalletSerializer
 
 
@@ -19,7 +18,7 @@ class WalletViewSet(
     serializer_class = WalletSerializer
     lookup_field = 'uuid'
     permission_classes = (IsWalletOwner,)
-    queryset = Wallet.objects.all()  # обязательно!
+    queryset = Wallet.objects.all()
     object = 'Кошелек'
 
     @action(detail=True, methods=('post',))
