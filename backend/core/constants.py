@@ -7,6 +7,6 @@ AMOUNT_MIN_VALUE = 0.01
 MONEY_DEFAULT = 0
 OPERATION_TYPE_MAX_LENGTH = 10
 
-USER_LOGIN_URL = '/api/v1/auth/token/login/'
-WALLET_DETAIL_URL = '/api/v1/wallets/{uuid}/'
-WALLET_OPERATION_URL = '/api/v1/wallets/{uuid}/operation/'
+USER_LOGIN_URL = "/api/v1/auth/token/login/"
+WALLET_DETAIL_URL = "/api/v1/wallets/{uuid}/"
+WALLET_OPERATION_URL = "/api/v1/wallets/{uuid}/operation/"

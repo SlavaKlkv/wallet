@@ -12,10 +12,12 @@ def update_wallet_balance(sender, instance, **kwargs):
     totals = {
         operation_type: wallet.operations.filter(
             operation_type=operation_type
-        ).aggregate(total=Sum('amount'))['total'] or 0
+        ).aggregate(total=Sum("amount"))["total"]
+        or 0
         for operation_type in (Operation.DEPOSIT, Operation.WITHDRAW)
     }
 
-    wallet.balance = (totals.get(Operation.DEPOSIT)
-                      - totals.get(Operation.WITHDRAW))
-    wallet.save(update_fields=['balance'])
+    wallet.balance = totals.get(Operation.DEPOSIT) - totals.get(
+        Operation.WITHDRAW
+    )
+    wallet.save(update_fields=["balance"])

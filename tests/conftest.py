@@ -8,8 +8,7 @@ import pytest
 
 
 BASE_DIR = os.path.join(
-    os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
-    "backend"
+    os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "backend"
 )
 sys.path.append(BASE_DIR)
 

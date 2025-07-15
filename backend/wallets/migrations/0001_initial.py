@@ -56,7 +56,9 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "updated_at",
-                    models.DateTimeField(auto_now=True, verbose_name="Дата обновления"),
+                    models.DateTimeField(
+                        auto_now=True, verbose_name="Дата обновления"
+                    ),
                 ),
                 (
                     "user",
@@ -90,7 +92,10 @@ class Migration(migrations.Migration):
                 (
                     "operation_type",
                     models.CharField(
-                        choices=[("deposit", "Пополнение"), ("withdraw", "Снятие")],
+                        choices=[
+                            ("deposit", "Пополнение"),
+                            ("withdraw", "Снятие"),
+                        ],
                         help_text="Тип операции: пополнение или снятие",
                         max_length=10,
                         verbose_name="Тип операции",
@@ -103,7 +108,9 @@ class Migration(migrations.Migration):
                         help_text="Сумма операции",
                         max_digits=14,
                         validators=[
-                            django.core.validators.MinValueValidator(Decimal("0.01"))
+                            django.core.validators.MinValueValidator(
+                                Decimal("0.01")
+                            )
                         ],
                         verbose_name="Сумма",
                     ),

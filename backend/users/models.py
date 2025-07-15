@@ -10,7 +10,7 @@ class User(AbstractUser):
     email = models.EmailField(
         unique=True,
         max_length=EMAIL_MAX_LENGTH,
-        verbose_name="Адрес электронной почты"
+        verbose_name="Адрес электронной почты",
     )
     username = models.CharField(
         unique=True,
@@ -19,12 +19,10 @@ class User(AbstractUser):
         validators=[UnicodeUsernameValidator()],
     )
     first_name = models.CharField(
-        max_length=NAME_MAX_LENGTH,
-        verbose_name="Имя"
+        max_length=NAME_MAX_LENGTH, verbose_name="Имя"
     )
     last_name = models.CharField(
-        max_length=NAME_MAX_LENGTH,
-        verbose_name="Фамилия"
+        max_length=NAME_MAX_LENGTH, verbose_name="Фамилия"
     )
     avatar = models.ImageField(
         "Аватар",

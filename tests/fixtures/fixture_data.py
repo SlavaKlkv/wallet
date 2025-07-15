@@ -20,6 +20,7 @@ def wallet(user):
 def make_deposit():
     def _make(wallet, amount):
         return _make_operation(wallet, amount, Operation.DEPOSIT)
+
     return _make
 
 
@@ -27,4 +28,5 @@ def make_deposit():
 def make_withdraw():
     def _make(wallet, amount):
         return _make_operation(wallet, amount, Operation.WITHDRAW)
+
     return _make

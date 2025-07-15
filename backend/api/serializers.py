@@ -8,10 +8,10 @@ class WalletSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Wallet
-        fields = ('balance',)
+        fields = ("balance",)
 
 
 class OperationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Operation
-        fields = ('operation_type', 'amount')
+        fields = ("operation_type", "amount")

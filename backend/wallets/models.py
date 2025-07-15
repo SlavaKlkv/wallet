@@ -1,5 +1,5 @@
-import uuid
 from decimal import Decimal
+import uuid
 
 from django.conf import settings
 from django.core.exceptions import ValidationError
@@ -17,88 +17,83 @@ from core.constants import (
 
 class Wallet(models.Model):
     uuid = models.UUIDField(
-        unique=True,
-        default=uuid.uuid4,
-        editable=False,
-        verbose_name='UUID'
+        unique=True, default=uuid.uuid4, editable=False, verbose_name="UUID"
     )
     user = models.OneToOneField(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
-        related_name='wallet',
-        verbose_name='Владелец',
-        help_text='Пользователь, владеющий кошельком'
+        related_name="wallet",
+        verbose_name="Владелец",
+        help_text="Пользователь, владеющий кошельком",
     )
     balance = models.DecimalField(
         max_digits=MONEY_MAX_DIGITS,
         decimal_places=MONEY_DECIMAL_PLACES,
         default=MONEY_DEFAULT,
-        verbose_name='Баланс'
+        verbose_name="Баланс",
     )
     created_at = models.DateTimeField(
-        auto_now_add=True,
-        verbose_name='Дата создания'
+        auto_now_add=True, verbose_name="Дата создания"
     )
     updated_at = models.DateTimeField(
-        auto_now=True,
-        verbose_name='Дата обновления'
+        auto_now=True, verbose_name="Дата обновления"
     )
 
     class Meta:
         verbose_name = "Кошелек"
         verbose_name_plural = "Кошельки"
-        ordering = ('-created_at',)
+        ordering = ("-created_at",)
 
     def __str__(self):
         return f"Кошелек {str(self.uuid)[:8]}"
 
 
 class Operation(models.Model):
-    DEPOSIT = 'deposit'
-    WITHDRAW = 'withdraw'
+    DEPOSIT = "deposit"
+    WITHDRAW = "withdraw"
     OPERATION_TYPE_CHOICES = (
-        (DEPOSIT, 'Пополнение'),
-        (WITHDRAW, 'Снятие'),
+        (DEPOSIT, "Пополнение"),
+        (WITHDRAW, "Снятие"),
     )
 
     wallet = models.ForeignKey(
         Wallet,
         on_delete=models.CASCADE,
-        related_name='operations',
-        verbose_name='Кошелёк',
+        related_name="operations",
+        verbose_name="Кошелёк",
         blank=False,
         null=False,
-        help_text='Кошелёк, к которому относится операция'
+        help_text="Кошелёк, к которому относится операция",
     )
     operation_type = models.CharField(
         max_length=OPERATION_TYPE_MAX_LENGTH,
         choices=OPERATION_TYPE_CHOICES,
-        verbose_name='Тип операции',
-        help_text='Тип операции: пополнение или снятие'
+        verbose_name="Тип операции",
+        help_text="Тип операции: пополнение или снятие",
     )
     amount = models.DecimalField(
         max_digits=MONEY_MAX_DIGITS,
         decimal_places=MONEY_DECIMAL_PLACES,
-        verbose_name='Сумма',
-        help_text='Сумма операции',
+        verbose_name="Сумма",
+        help_text="Сумма операции",
         validators=[MinValueValidator(Decimal(str(AMOUNT_MIN_VALUE)))],
     )
     created_at = models.DateTimeField(
         auto_now_add=True,
-        verbose_name='Время операции',
-        help_text='Время проведения операции'
+        verbose_name="Время операции",
+        help_text="Время проведения операции",
     )
 
     class Meta:
         verbose_name = "Операция"
         verbose_name_plural = "Операции"
-        ordering = ('-created_at',)
+        ordering = ("-created_at",)
 
     def clean(self):
         if self.operation_type == self.WITHDRAW:
             wallet = Wallet.objects.get(pk=self.wallet.pk)
             if wallet.balance < self.amount:
-                raise ValidationError('Недостаточно средств.')
+                raise ValidationError("Недостаточно средств.")
 
     def save(self, *args, **kwargs):
         self.clean()
