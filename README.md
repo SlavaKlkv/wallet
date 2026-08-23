@@ -1,5 +1,7 @@
 # Wallet
 
+[![CI](https://img.shields.io/github/actions/workflow/status/SlavaKlkv/wallet/ci.yml?style=flat-square&label=CI)](../../actions)
+
 Кошелёк с тремя операциями — узнать баланс, пополнить, снять. Вся сложность
 здесь в одном вопросе: что произойдёт, если по одному кошельку прилетит
 пятьдесят запросов одновременно.
@@ -31,6 +33,12 @@ flowchart LR
 поэтому история и баланс не могут разойтись: баланс — производная от истории,
 а не отдельно хранимое мнение о ней.
 
+Всё это проверяется тестами, а не декларируется: десять одновременных снятий
+по 200 при балансе 1000 дают ровно пять успешных ответов и ноль на балансе,
+двадцать параллельных пополнений не теряют ни одного, смесь операций сходится
+до копейки. Если убрать `select_for_update()`, все три теста падают — это
+регрессия, а не украшение.
+
 Ещё пара решений в ту же сторону: деньги хранятся в `DecimalField`, а не во
 `float`; проверка средств продублирована в `Operation.clean()`, чтобы операцию
 в минус нельзя было создать из админки или shell; кошелёк адресуется UUID, а не
@@ -59,11 +67,19 @@ pip install -r backend/requirements.txt
 
 python backend/manage.py migrate
 python backend/manage.py runserver
-
-pytest
 ```
 
-С `USE_SQLITE=1` Postgres не нужен — удобно для быстрого прогона тестов.
+## Тесты
+
+```bash
+pytest                    # нужен PostgreSQL
+USE_SQLITE=1 pytest       # без Postgres: проверки конкурентности пропускаются
+```
+
+Тестов 24. Проверки конкурентности требуют `SELECT … FOR UPDATE`, которого в
+SQLite нет, поэтому на SQLite они помечаются как skip, а не падают. В
+[CI](.github/workflows/ci.yml) на каждый push и PR поднимается PostgreSQL 17 и
+прогоняется весь набор, плюс `flake8`, `isort` и `black`.
 
 ## API
 
@@ -102,7 +118,7 @@ nginx/          прокси
 tests/          pytest, покрыты все эндпоинты
 ```
 
-Стек: Python 3.9, Django 4.2, DRF 3.16, PostgreSQL 17, pytest, Docker Compose.
+Стек: Python 3.12, Django 4.2, DRF 3.16, PostgreSQL 17, pytest, Docker Compose.
 
 ## Переменные окружения
 

@@ -1,12 +1,10 @@
-FROM python:3.9
+FROM python:3.12
 
 WORKDIR /app
 
-RUN pip install gunicorn==20.1.0
-
 COPY requirements.txt .
 
-RUN pip install -r requirements.txt --no-cache-dir
+RUN pip install --no-cache-dir -r requirements.txt gunicorn==23.0.0
 
 COPY . .
 
