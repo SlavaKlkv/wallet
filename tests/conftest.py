@@ -38,3 +38,18 @@ def temp_media_root():
     settings.MEDIA_ROOT = temp_dir
     yield
     shutil.rmtree(temp_dir)
+
+
+@pytest.fixture
+def requires_row_locks(db):
+    """Пропустить тест, если БД не умеет блокировать строки.
+
+    `SELECT … FOR UPDATE` есть только в Postgres; SQLite вместо этого
+    блокирует таблицу целиком и параллельные запросы просто падают.
+    """
+    from django.db import connection
+
+    if connection.vendor != "postgresql":
+        pytest.skip(
+            "Тест требует PostgreSQL: SQLite не поддерживает FOR UPDATE"
+        )

@@ -88,7 +88,7 @@ class TestWallets:
         assert_response_and_balance(response, wallet, url, expected_balance)
 
     def test_wallet_parallel_operations(
-        self, auth_client, wallet, make_deposit
+        self, auth_client, wallet, make_deposit, requires_row_locks
     ):
         """Операции корректно работают при параллельных запросах."""
 
