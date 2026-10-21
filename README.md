@@ -12,11 +12,22 @@
 половину операций, потому что между чтением и записью успевает вклиниться
 соседний запрос. Здесь этого не может случиться:
 
+**1. Блокировка кошелька и проверка средств**
+
 ```mermaid
+%%{init: {"themeVariables": {"fontSize": "20px"}, "flowchart": {"nodeSpacing": 64, "rankSpacing": 72, "diagramPadding": 28}}}%%
 flowchart LR
   R["POST /wallets/{uuid}/operation"] --> T["transaction.atomic"]
   T --> L["SELECT … FOR UPDATE<br/>строка кошелька заблокирована"]
-  L --> V{"хватает<br/>средств?"}
+  L --> V{"хватает средств?"}
+```
+
+**2. Результат проверки**
+
+```mermaid
+%%{init: {"themeVariables": {"fontSize": "20px"}, "flowchart": {"nodeSpacing": 64, "rankSpacing": 72, "diagramPadding": 28}}}%%
+flowchart LR
+  V{"хватает средств?"}
   V -- нет --> E["400 · Недостаточно средств"]
   V -- да --> O["Operation.objects.create"]
   O --> S["post_save · пересчёт баланса<br/>из суммы операций"]
