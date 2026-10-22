@@ -18,7 +18,7 @@
 flowchart LR
   R["POST /wallets/{uuid}/operation"] --> T["transaction.atomic"]
   T --> L["SELECT … FOR UPDATE<br/>строка кошелька заблокирована"]
-  L --> V{"хватает средств?"}
+  L --> C["проверка доступного баланса"]
 ```
 
 **2. Результат проверки**
