@@ -15,7 +15,6 @@
 **1. Блокировка кошелька и проверка средств**
 
 ```mermaid
-%%{init: {"themeVariables": {"fontSize": "18px"}, "flowchart": {"nodeSpacing": 56, "rankSpacing": 64, "diagramPadding": 24, "padding": 12}}}%%
 flowchart LR
   R["POST /wallets/{uuid}/operation"] --> T["transaction.atomic"]
   T --> L["SELECT … FOR UPDATE<br/>строка кошелька заблокирована"]
@@ -25,7 +24,6 @@ flowchart LR
 **2. Результат проверки**
 
 ```mermaid
-%%{init: {"themeVariables": {"fontSize": "18px"}, "flowchart": {"nodeSpacing": 56, "rankSpacing": 64, "diagramPadding": 24, "padding": 12}}}%%
 flowchart LR
   V{"хватает средств?"}
   V -- нет --> E["400 · Недостаточно средств"]
